@@ -1,3 +1,4 @@
+#include <memory>
 #include <pluginlib/class_loader.hpp>
 #include <polygon_base/regular_polygon.hpp>
 
@@ -7,25 +8,20 @@ auto main(int argc, char ** argv) -> int
   (void)argc;
   (void)argv;
 
-  pluginlib::ClassLoader<polygon_base::RegularPolygon> poly_loader(
-    "polygon_base", "polygon_base::RegularPolygon");
-
   try
   {
-    std::shared_ptr<polygon_base::RegularPolygon> triangle =
-      poly_loader.createSharedInstance("polygon_plugins::Triangle");
-    triangle->initialize(10.0);
+    pluginlib::ClassLoader<polygon_base::RegularPolygon> poly_loader(
+      "polygon_base", "polygon_base::RegularPolygon");
 
-    std::shared_ptr<polygon_base::RegularPolygon> square =
-      poly_loader.createSharedInstance("polygon_plugins::Square");
-    square->initialize(10.0);
+    auto sq_ptr = std::unique_ptr<polygon_base::RegularPolygon>(
+      poly_loader.createUnmanagedInstance("polygon_plugins::Square"));
+    sq_ptr->initialize(10.0);
+    auto sq_ptr2 = std::unique_ptr<polygon_base::RegularPolygon>(
+      poly_loader.createUnmanagedInstance("polygon_plugins::Square"));
+    sq_ptr2->initialize(12.0);
 
-    std::shared_ptr<polygon_base::RegularPolygon> triangle2 =
-      poly_loader.createSharedInstance("polygon_plugins::Triangle");
-    triangle->initialize(11.0);
-
-    printf("Triangle area: %.2f\n", triangle->area());
-    printf("Square area: %.2f\n", square->area());
+    printf("Square area: %.2f\n", sq_ptr->area());
+    printf("Square area: %.2f\n", sq_ptr2->area());
   }
   catch (pluginlib::PluginlibException & ex)
   {

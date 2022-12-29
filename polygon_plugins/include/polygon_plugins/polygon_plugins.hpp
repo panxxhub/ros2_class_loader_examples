@@ -11,12 +11,9 @@ namespace polygon_plugins
 class Square : public polygon_base::RegularPolygon
 {
 public:
-  void initialize(double side_length) override { side_length_ = side_length; }
+  void initialize(double side_length) override;
 
-  auto area() -> double override { return side_length_ * side_length_; }
-
-protected:
-  double side_length_;
+  auto area() -> double override;
 };
 
 class Triangle : public polygon_base::RegularPolygon

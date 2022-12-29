@@ -1,7 +1,16 @@
 #include "polygon_plugins/polygon_plugins.hpp"
+namespace
+{
+
+double base = 1.0;
+
+}
 
 namespace polygon_plugins
 {
+
+void Square::initialize(double side_length) { base = side_length; }
+auto Square::area() -> double { return base * base; }
 
 }  // namespace polygon_plugins
 
